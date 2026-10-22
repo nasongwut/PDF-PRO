@@ -11,15 +11,15 @@
   "downloads": {
     "windows": {
       "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.0.0/PDF-PRO-1.0.0-windows-setup.exe",
-      "sha256": ""
+      "sha256": "6d72cbfcc629887d5b77db4582e87d2595dc38561bceab4330ae1a7ef2598716"
     },
     "mac-arm64": {
       "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.0.0/PDF-PRO-1.0.0-mac-arm64.dmg",
-      "sha256": ""
+      "sha256": "847abe66e757e33cc1c6d3a1713103a6fb588bf04efbab75821f87e25447d3d2"
     },
     "mac-x64": {
       "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.0.0/PDF-PRO-1.0.0-mac-x64.dmg",
-      "sha256": ""
+      "sha256": "bdcbd9a73eea31593c540948165cab052e93c36d025db02601ed1acaae4201e0"
     },
     "source": {
       "url": "https://github.com/nasongwut/PDF-PRO/archive/refs/tags/v1.0.0.zip",
