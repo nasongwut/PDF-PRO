@@ -1,0 +1,35 @@
+{
+  "name": "PDF PRO",
+  "version": "1.0.0",
+  "released": "2026-10-22",
+  "notes": {
+    "th": "เวอร์ชันแรกของ PDF PRO 🎉\n• เปิด แก้ไข พิมพ์ PDF ภาษาไทย/อังกฤษ\n• แก้ข้อความเดิมโดยรักษาฟอนต์\n• หลายแท็บ มุมมองหลายไฟล์ ลากหน้าข้ามไฟล์\n• รูปภาพ ลายเซ็น ส่งออกรูป\n• ตรวจหาและติดตั้งอัปเดตในโปรแกรม",
+    "en": "First release of PDF PRO 🎉\n• Open, edit and print PDFs (Thai / English)\n• Edit existing text keeping the original font\n• Tabs, multi-file view, drag pages between files\n• Images, signatures, image export\n• In-app update check and install"
+  },
+  "page": "https://github.com/nasongwut/PDF-PRO/releases/tag/v1.0.0",
+  "homepage": "https://github.com/nasongwut/PDF-PRO",
+  "downloads": {
+    "windows": {
+      "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.0.0/PDF-PRO-1.0.0-windows-setup.exe",
+      "sha256": ""
+    },
+    "mac-arm64": {
+      "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.0.0/PDF-PRO-1.0.0-mac-arm64.dmg",
+      "sha256": ""
+    },
+    "mac-x64": {
+      "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.0.0/PDF-PRO-1.0.0-mac-x64.dmg",
+      "sha256": ""
+    },
+    "source": {
+      "url": "https://github.com/nasongwut/PDF-PRO/archive/refs/tags/v1.0.0.zip",
+      "sha256": ""
+    }
+  },
+  "donate": [
+    {
+      "label": "GitHub Sponsors",
+      "url": "https://github.com/sponsors/nasongwut"
+    }
+  ]
+}

@@ -20,11 +20,11 @@ echo Preparing PDF PRO for the first time...
 %PY% -m venv .venv
 if errorlevel 1 goto fail
 :havevenv
-".venv\Scripts\python.exe" -c "import pymupdf, customtkinter, PIL" >nul 2>nul
+".venv\Scripts\python.exe" -c "import pymupdf, customtkinter, PIL, certifi" >nul 2>nul
 if not errorlevel 1 goto run
-echo Installing PyMuPDF, CustomTkinter and Pillow (needs internet)...
+echo Installing PyMuPDF, CustomTkinter, Pillow and certifi (needs internet)...
 ".venv\Scripts\python.exe" -m pip install --upgrade pip >nul 2>nul
-".venv\Scripts\python.exe" -m pip install --upgrade pymupdf customtkinter pillow
+".venv\Scripts\python.exe" -m pip install --upgrade -r requirements.txt
 if errorlevel 1 goto fail
 :run
 start "" ".venv\Scripts\pythonw.exe" "%~dp0pdf_pro.py" %*

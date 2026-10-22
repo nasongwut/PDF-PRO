@@ -1,0 +1,19 @@
+﻿PDF PRO — Copyright (C) 2026 nasongwut — https://github.com/nasongwut/PDF-PRO
+
+PDF PRO is FREE SOFTWARE: you can use it free of charge for any purpose, and you can
+redistribute it and/or modify it under the terms of the GNU Affero General Public License
+as published by the Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details:
+https://www.gnu.org/licenses/agpl-3.0.html
+(the release builds include the full text as LICENSE-AGPL-3.0.txt)
+
+PDF PRO uses PyMuPDF / MuPDF (AGPL-3.0, Artifex Software), CustomTkinter (MIT),
+Pillow (MIT-CMU), certifi (MPL-2.0), and bundles the fonts Sarabun (SIL Open Font License 1.1)
+and TH Sarabun New (free font by SIPA, Thailand).
+
+ภาษาไทย: PDF PRO เป็นซอฟต์แวร์ฟรี ใช้งานได้ฟรีทุกวัตถุประสงค์ และเผยแพร่/แก้ไขได้
+ภายใต้สัญญาอนุญาต GNU AGPL-3.0 (โปรแกรมนี้ไม่มีการรับประกันใด ๆ)

@@ -1,0 +1,39 @@
+﻿PDF PRO — โปรแกรมฟรี 100% / 100% FREE SOFTWARE
+==================================================
+
+ภาษาไทย
+-------
+PDF PRO เป็นโปรแกรมเปิด แก้ไข และพิมพ์ไฟล์ PDF ที่ "ฟรี" ทั้งหมด
+
+  ✓ ฟรี ไม่มีค่าใช้จ่าย ไม่มีรุ่นทดลอง ไม่มีการเก็บเงินภายหลัง
+  ✓ ใช้ได้ทั้งส่วนตัว หน่วยงานราชการ บริษัท และองค์กร
+  ✓ ไม่มีโฆษณา ไม่มีการเก็บข้อมูลผู้ใช้
+  ✓ ไฟล์ทั้งหมดประมวลผลในเครื่องของคุณ ไม่มีการอัปโหลด
+  ✓ โอเพนซอร์ส — ดูและดาวน์โหลดซอร์สโค้ดได้ที่ลิงก์ด้านล่าง
+
+หากมีผู้ใดเรียกเก็บเงินค่าโปรแกรมนี้ โปรดทราบว่าคุณสามารถดาวน์โหลดได้ฟรีจากต้นทาง
+
+เครดิต / ดาวน์โหลดต้นฉบับ:
+  https://github.com/nasongwut/PDF-PRO
+
+ถ้าโปรแกรมมีประโยชน์ สนับสนุนผู้พัฒนาได้ที่เมนู "สนับสนุนผู้พัฒนา (Donate)" ในโปรแกรม
+หรือกดดาว ⭐ ให้โปรเจกต์บน GitHub
+
+
+English
+-------
+PDF PRO is a completely FREE application to open, edit and print PDF files.
+
+  ✓ Free of charge — no trial, no subscription, no hidden fees
+  ✓ Free for personal, government and commercial use
+  ✓ No ads, no tracking
+  ✓ Your files never leave your computer
+  ✓ Open source — get the source code at the link below
+
+If someone charged you for this program, you can always download it for free from the original source.
+
+Credits / original download:
+  https://github.com/nasongwut/PDF-PRO
+
+If PDF PRO is useful to you, please consider supporting the developer through the
+"Donate" menu in the app, or give the project a ⭐ on GitHub.

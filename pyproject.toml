@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pdfpro"
+dynamic = ["version"]
+description = "PDF PRO — open, edit and print PDF files (Thai / English)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "AGPL-3.0-or-later"}
+dependencies = ["pymupdf>=1.24", "customtkinter>=5.2", "pillow>=10", "certifi"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.5"]
+build = ["pyinstaller>=6.5"]
+
+[project.scripts]
+pdfpro = "pdfpro.ui.app:main"
+
+[project.urls]
+Homepage = "https://github.com/nasongwut/PDF-PRO"
+
+[tool.setuptools.dynamic]
+version = {attr = "pdfpro.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["pdfpro*"]
+
+[tool.setuptools.package-data]
+pdfpro = ["assets/fonts/*.ttf", "assets/icon.png"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501", "B008", "UP031", "B023", "E741"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["pdfpro"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

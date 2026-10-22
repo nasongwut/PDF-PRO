@@ -1,0 +1,172 @@
+# Build PDF PRO for Windows (installer wizard) and macOS (Apple Silicon + Intel) on every push to main.
+# When pdfpro/__init__.py has a version that has no GitHub release yet, the builds are published as
+# release v<version> and server/latest.json is updated so installed copies offer the update.
+name: Build & Release
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "server/latest.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  prepare:
+    name: Test & read version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      publish: ${{ steps.v.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Lint
+        run: ruff check .
+      - name: Unit tests
+        run: pytest -q
+      - name: Version / release check
+        id: v
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' pdfpro/__init__.py)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if gh release view "v$VERSION" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"; echo "Release v$VERSION already exists — build only"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"; echo "Will publish release v$VERSION"
+          fi
+
+  windows:
+    name: Windows installer
+    needs: prepare
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          architecture: x64
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt "pyinstaller>=6.5"
+      - name: Fetch AGPL licence text
+        shell: pwsh
+        run: Invoke-WebRequest "https://www.gnu.org/licenses/agpl-3.0.txt" -OutFile LICENSE-AGPL-3.0.txt
+      - name: Build app (PyInstaller)
+        run: pyinstaller --noconfirm --clean packaging/pdfpro.spec
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
+      - name: Build installer wizard
+        shell: pwsh
+        run: |
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DAppVersion=${{ needs.prepare.outputs.version }}" "/DSourceDir=..\..\dist\PDF PRO" "/DOutputDir=..\..\dist" packaging\windows\installer.iss
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/PDF-PRO-*-windows-setup.exe
+          if-no-files-found: error
+
+  macos:
+    name: macOS ${{ matrix.arch }}
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14          # Apple Silicon (M1/M2/M3/M4)
+            arch: arm64
+          - os: macos-15-intel    # Intel
+            arch: x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Build app + dmg
+        env:
+          PYTHON: python
+        run: bash packaging/build_mac.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-${{ matrix.arch }}
+          path: dist/PDF-PRO-*-mac-*.dmg
+          if-no-files-found: error
+
+  release:
+    name: Publish release v${{ needs.prepare.outputs.version }}
+    needs: [prepare, windows, macos]
+    if: needs.prepare.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Update server/latest.json
+        run: python server/make_manifest.py --version "${{ needs.prepare.outputs.version }}" --dist dist
+      - name: Release notes
+        run: |
+          V="${{ needs.prepare.outputs.version }}"
+          {
+            echo "## PDF PRO v$V — ฟรี 100% / 100% Free"
+            echo
+            cat "server/release_notes/$V.th.md" 2>/dev/null || true
+            echo
+            cat "server/release_notes/$V.en.md" 2>/dev/null || true
+            echo
+            echo "### ดาวน์โหลด / Download"
+            echo "| ระบบ / System | ไฟล์ / File |"
+            echo "|---|---|"
+            echo "| Windows 10 / 11 (installer) | \`PDF-PRO-$V-windows-setup.exe\` |"
+            echo "| macOS Apple Silicon (M1–M4) | \`PDF-PRO-$V-mac-arm64.dmg\` |"
+            echo "| macOS Intel | \`PDF-PRO-$V-mac-x64.dmg\` |"
+            echo
+            echo "> macOS: เปิดครั้งแรกให้คลิกขวาที่แอป > Open · Windows: ถ้า SmartScreen เตือน ให้กด More info > Run anyway"
+            echo
+            echo "โปรแกรมนี้ฟรี ไม่มีค่าใช้จ่าย ไม่มีโฆษณา · This program is free — no fees, no ads."
+            echo "Credits: https://github.com/${{ github.repository }} · ❤ Donate: see the Donate menu in the app"
+            echo
+            echo "SHA-256:"
+            echo '```'
+            (cd dist && sha256sum *)
+            echo '```'
+          } > release_body.md
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.prepare.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: PDF PRO v${{ needs.prepare.outputs.version }} (Free)
+          body_path: release_body.md
+          files: dist/*
+          make_latest: true
+      - name: Commit manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add server/latest.json
+          git diff --cached --quiet || git commit -m "chore(release): update server/latest.json for v${{ needs.prepare.outputs.version }} [skip ci]"
+          git push origin HEAD:main

@@ -36,9 +36,9 @@ if [ -x .venv/bin/python ] && [ "$(.venv/bin/python -c 'import platform;print(pl
 if [ ! -x .venv/bin/python ]; then
   echo "กำลังเตรียมโปรแกรมครั้งแรก…"; "$PY" -m venv .venv || { read -n 1 -s -r -p "สร้าง venv ไม่สำเร็จ กดปุ่มใดก็ได้"; exit 1; }
 fi
-if ! .venv/bin/python -c "import pymupdf, customtkinter, PIL" >/dev/null 2>&1; then
-  echo "กำลังติดตั้งส่วนประกอบ (PyMuPDF, CustomTkinter, Pillow)…"
+if ! .venv/bin/python -c "import pymupdf, customtkinter, PIL, certifi" >/dev/null 2>&1; then
+  echo "กำลังติดตั้งส่วนประกอบ (PyMuPDF, CustomTkinter, Pillow, certifi)…"
   .venv/bin/python -m pip install --upgrade pip >/dev/null 2>&1
-  .venv/bin/python -m pip install --upgrade pymupdf customtkinter pillow || { read -n 1 -s -r -p "ติดตั้งไม่สำเร็จ (ตรวจอินเทอร์เน็ต) กดปุ่มใดก็ได้"; exit 1; }
+  .venv/bin/python -m pip install --upgrade -r requirements.txt || { read -n 1 -s -r -p "ติดตั้งไม่สำเร็จ (ตรวจอินเทอร์เน็ต) กดปุ่มใดก็ได้"; exit 1; }
 fi
 exec .venv/bin/python pdf_pro.py "$@"
