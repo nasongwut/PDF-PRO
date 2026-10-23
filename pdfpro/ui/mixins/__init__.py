@@ -6,6 +6,7 @@ from .files import FilesMixin
 from .history import HistoryMixin
 from .home import HomeMixin
 from .images import ImagesMixin
+from .page_actions import PageActionsMixin
 from .pages import PagesMixin
 from .properties import PropertiesMixin
 from .text import TextMixin
@@ -17,6 +18,7 @@ __all__ = [
     "HistoryMixin",
     "HomeMixin",
     "ImagesMixin",
+    "PageActionsMixin",
     "PagesMixin",
     "PropertiesMixin",
     "TextMixin",

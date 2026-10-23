@@ -101,18 +101,26 @@ class FilesMixin:
             apply_objects(page, objs[i], self.images)
         return out
 
+    def _last_dir(self):
+        """folder of the most recently opened file (default location for new documents)"""
+        for d in reversed(self.docs):
+            if d.path:
+                return os.path.dirname(d.path)
+        return None
+
     def save(self, as_new=False):
         if not self.has_doc():
             return False
         path = self.path
         if as_new or not path or not self._saved_once:
-            base = os.path.splitext(os.path.basename(self.path or _("เอกสาร.pdf")))[0]
-            if not base.endswith(_("-แก้ไข")):
+            suggested = self.active.suggested_name if not self.path else ""
+            base = os.path.splitext(os.path.basename(self.path or suggested or _("เอกสาร.pdf")))[0]
+            if not suggested and not base.endswith(_("-แก้ไข")):
                 base += _("-แก้ไข")
             path = filedialog.asksaveasfilename(
                 title=_("บันทึกไฟล์ PDF"),
                 defaultextension=".pdf",
-                initialdir=os.path.dirname(self.path) if self.path else None,
+                initialdir=os.path.dirname(self.path) if self.path else self._last_dir(),
                 initialfile=base + ".pdf",
                 filetypes=[("PDF", "*.pdf")],
             )

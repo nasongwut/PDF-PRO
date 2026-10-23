@@ -31,6 +31,7 @@ class Document:
         self.pdfsel: Optional[dict] = None  # selected image that is part of the PDF
         self.scroll = (0.0, 0.0)
         self.fitted = False
+        self.suggested_name = ""  # default file name when a new document is saved
 
     # ------------------------------------------------------------------ info
     @property
@@ -40,6 +41,11 @@ class Document:
     @property
     def name(self) -> str:
         return os.path.basename(self.path) if self.path else ""
+
+    @property
+    def title(self) -> str:
+        """file name, or the suggested name of a new document (empty when unknown)"""
+        return self.name or self.suggested_name
 
     # ------------------------------------------------------------------ history
     def snapshot(self):
@@ -103,3 +109,122 @@ def transfer_page(src: Document, index: int, dst: Document, position: int, copy_
         src.cur = min(src.cur, src.page_count - 1)
         src.structure_changed()
     return position
+
+
+def transfer_pages(src: Document, indices, dst: Document, position: int, copy_pages: bool = False) -> list:
+    """Move (or copy) several pages of ``src`` to ``position`` in ``dst``, keeping their order.
+
+    Works inside one document (reorder / duplicate a block) and between documents. Overlay objects
+    travel with the pages. Returns the new indices of the pages in ``dst``. No undo snapshots are taken.
+    """
+    pages = sorted(set(i for i in indices if 0 <= i < src.page_count))
+    if not pages:
+        return []
+    position = max(0, min(position, dst.page_count))
+    if src is dst:
+        n = src.page_count
+        if copy_pages:
+            order = list(range(position)) + pages + list(range(position, n))
+            first = position
+        else:
+            rest = [p for p in range(n) if p not in pages]
+            first = position - sum(1 for p in pages if p < position)
+            order = rest[:first] + pages + rest[first:]
+        if order == list(range(n)):
+            return pages
+        objs = [copy.deepcopy(src.objs[i]) for i in order]
+        src.doc.select(order)
+        src.objs = objs
+        src.structure_changed()
+        return list(range(first, first + len(pages)))
+    for k, i in enumerate(pages):
+        dst.doc.insert_pdf(src.doc, from_page=i, to_page=i, start_at=position + k)
+        dst.objs.insert(position + k, copy.deepcopy(src.objs[i]))
+    dst.structure_changed()
+    if not copy_pages:
+        for i in reversed(pages):
+            src.doc.delete_page(i)
+            src.objs.pop(i)
+        src.cur = max(0, min(src.cur, src.page_count - 1))
+        src.structure_changed()
+    return list(range(position, position + len(pages)))
+
+
+def extract_pages(src: Document, indices, remove: bool = False) -> Document:
+    """New in-memory :class:`Document` made of ``indices`` of ``src`` (optionally removed from ``src``)."""
+    pages = sorted(set(i for i in indices if 0 <= i < src.page_count))
+    new = Document(fitz.open(), None)
+    new.objs = []
+    transfer_pages(src, pages, new, 0, copy_pages=not remove)
+    base = os.path.splitext(src.title or "document")[0]
+    new.suggested_name = "%s-%s.pdf" % (base, page_range_label(pages))
+    new.dirty = True
+    return new
+
+
+def page_range_label(pages) -> str:
+    """[9, 10, 11, 14] -> 'p10-12,15'"""
+    out, start, prev = [], None, None
+    for p in sorted(pages):
+        if start is None:
+            start = prev = p
+        elif p == prev + 1:
+            prev = p
+        else:
+            out.append(str(start + 1) if start == prev else "%d-%d" % (start + 1, prev + 1))
+            start = prev = p
+    if start is not None:
+        out.append(str(start + 1) if start == prev else "%d-%d" % (start + 1, prev + 1))
+    return "p" + ",".join(out)
+
+
+def parse_page_ranges(text: str, page_count: int) -> list:
+    """'10-20, 3' -> [2, 9, 10, …, 19] (0-based, sorted, unique). Raises ValueError on bad input."""
+    pages = set()
+    for part in text.replace(" ", "").replace("–", "-").split(","):
+        if not part:
+            continue
+        if "-" in part:
+            a, b = part.split("-", 1)
+            a = int(a) if a else 1
+            b = int(b) if b else page_count
+            if a > b:
+                a, b = b, a
+            pages.update(range(max(1, a), min(page_count, b) + 1))
+        else:
+            v = int(part)
+            if 1 <= v <= page_count:
+                pages.add(v)
+    if not pages:
+        raise ValueError("no pages")
+    return sorted(p - 1 for p in pages)
+
+
+def duplicate_pages(doc: Document, indices) -> list:
+    """insert copies of ``indices`` right after the last of them; returns the new indices"""
+    pages = sorted(set(i for i in indices if 0 <= i < doc.page_count))
+    if not pages:
+        return []
+    return transfer_pages(doc, pages, doc, pages[-1] + 1, copy_pages=True)
+
+
+def delete_pages(doc: Document, indices) -> int:
+    """delete ``indices`` (at least one page always remains); returns how many were deleted"""
+    pages = set(i for i in indices if 0 <= i < doc.page_count)
+    keep = [i for i in range(doc.page_count) if i not in pages]
+    if not pages or not keep:
+        return 0
+    doc.objs = [doc.objs[i] for i in keep]
+    doc.doc.select(keep)
+    doc.cur = max(0, min(doc.cur, doc.page_count - 1))
+    doc.sel = None
+    doc.structure_changed()
+    return len(pages)
+
+
+def rotate_pages(doc: Document, indices, degrees: int) -> None:
+    for i in set(indices):
+        if 0 <= i < doc.page_count:
+            p = doc.doc[i]
+            p.set_rotation((p.rotation + degrees) % 360)
+    doc.structure_changed()

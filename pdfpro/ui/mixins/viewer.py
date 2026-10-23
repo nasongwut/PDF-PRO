@@ -215,11 +215,28 @@ class ViewerMixin:
         if y / H < top or (y + h) / H > bot:
             self.thumbs.yview_moveto(max(0, (y - 40) / H))
 
-    def on_thumb_click(self, e):
-        if not self.has_doc():
-            return
+    def thumb_index_at(self, e):
         y = self.thumbs.canvasy(e.y)
         for i, (_x0, y0, _w, h, _s) in enumerate(self._thumb_pos):
             if y0 - 8 <= y <= y0 + h + 24:
-                self.goto(i)
-                return
+                return i
+        return None
+
+    def on_thumb_click(self, e):
+        if not self.has_doc():
+            return
+        self.thumbs.focus_set()
+        i = self.thumb_index_at(e)
+        if i is not None:
+            self.goto(i)
+
+    def on_thumb_menu(self, e):
+        """right-click on a page thumbnail: duplicate / cut / copy / paste / delete…"""
+        if not self.editor_visible() or self.mode == "view":
+            return
+        i = self.thumb_index_at(e)
+        if i is None:
+            return
+        self.thumbs.focus_set()
+        self.goto(i)
+        self.page_menu(e, self.active, [i], i)

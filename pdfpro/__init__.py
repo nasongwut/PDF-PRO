@@ -22,7 +22,7 @@ __all__ = ["APP_NAME", "APP_ID", "__version__", "REPO_URL", "UPDATE_URL", "DONAT
 
 APP_NAME = "PDF PRO"
 APP_ID = "com.nasongwut.pdfpro"
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 #: project home — shown as credit in the app and in the installer
 REPO_URL = "https://github.com/nasongwut/PDF-PRO"

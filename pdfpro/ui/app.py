@@ -17,6 +17,7 @@ from pdfpro.ui.mixins.files import FilesMixin
 from pdfpro.ui.mixins.history import HistoryMixin
 from pdfpro.ui.mixins.home import HomeMixin
 from pdfpro.ui.mixins.images import ImagesMixin
+from pdfpro.ui.mixins.page_actions import RIGHT_CLICK, PageActionsMixin
 from pdfpro.ui.mixins.pages import PagesMixin
 from pdfpro.ui.mixins.properties import PropertiesMixin
 from pdfpro.ui.mixins.tabs import TabsMixin
@@ -54,6 +55,7 @@ class PDFProApp(
     TextMixin,
     PropertiesMixin,
     ImagesMixin,
+    PageActionsMixin,
     UpdatesMixin,
     ctk.CTk,
 ):
@@ -338,6 +340,12 @@ class PDFProApp(
         tsb.pack(side="right", fill="y", padx=(0, 2))
         self.thumbs.pack(side="left", fill="both", expand=True)
         self.thumbs.bind("<Button-1>", self.on_thumb_click)
+        for seq in RIGHT_CLICK:
+            self.thumbs.bind(seq, self.on_thumb_menu)
+        self.bind_page_keys(
+            self.thumbs,
+            lambda: (self.active, [self.cur]) if self.editor_visible() and self.mode == "edit" else None,
+        )
         self._bind_wheel(self.thumbs, lambda d: self.thumbs.yview_scroll(d, "units"))
 
     def _build_properties_panel(self):
@@ -572,7 +580,7 @@ class PDFProApp(
         self.b_undo.configure(state="normal" if (self.undo_stack and edit) else "disabled")
         self.b_redo.configure(state="normal" if (self.redo_stack and edit) else "disabled")
         self.b_home.configure(state="normal" if on else "disabled")
-        name = os.path.basename(self.path) if self.path else (_("เอกสารใหม่") if on else "")
+        name = (self.active.title or _("เอกสารใหม่")) if on else ""
         self.title(("● " if self.dirty else "") + (name + " — " if name else "") + APP_NAME)
         self.fname.configure(text=(name + ("  •  " + _("ยังไม่บันทึก") if self.dirty else "")) if on else "")
         if on and not edit:

@@ -109,7 +109,7 @@ class TabsMixin:
                 border_color=ACCENT if on else BORDER,
             )
             tab.pack(side="left", padx=(0, 6), pady=2)
-            name = d.name or _("เอกสารใหม่")
+            name = d.title or _("เอกสารใหม่")
             label = ctk.CTkLabel(
                 tab,
                 text=("● " if d.dirty else "") + (name if len(name) <= 28 else name[:26] + "…"),
