@@ -1,28 +1,28 @@
 {
   "name": "PDF PRO",
-  "version": "1.0.0",
-  "released": "2026-10-22",
+  "version": "1.1.0",
+  "released": "2026-10-23",
   "notes": {
-    "th": "เวอร์ชันแรกของ PDF PRO 🎉\n• เปิด แก้ไข พิมพ์ PDF ภาษาไทย/อังกฤษ\n• แก้ข้อความเดิมโดยรักษาฟอนต์\n• หลายแท็บ มุมมองหลายไฟล์ ลากหน้าข้ามไฟล์\n• รูปภาพ ลายเซ็น ส่งออกรูป\n• ตรวจหาและติดตั้งอัปเดตในโปรแกรม",
-    "en": "First release of PDF PRO 🎉\n• Open, edit and print PDFs (Thai / English)\n• Edit existing text keeping the original font\n• Tabs, multi-file view, drag pages between files\n• Images, signatures, image export\n• In-app update check and install"
+    "th": "แยกเอกสารด้วยการลากวาง ✂️\n• มุมมองหลายไฟล์: เลือกหลายหน้าด้วย Shift / Ctrl(⌘) + คลิก หรือ \"เลือกทั้งหมด\"\n• ลากหน้าที่เลือกไปวางที่ช่อง \"ลากหน้ามาวางที่นี่\" เพื่อแยกเป็นไฟล์ใหม่ทันที (เช่น หน้า 10–20 จากไฟล์ 20 หน้า)\n• ปุ่ม \"แยกหน้าเป็นไฟล์ใหม่…\" พิมพ์ช่วงหน้าได้ เช่น 10-20 หรือ 1,3,5-7\n• ลากหลายหน้าพร้อมกันไปไฟล์อื่นหรือเรียงใหม่ในไฟล์เดียวกัน (กด Alt/⌥ ค้างเพื่อคัดลอก)\n• ไฟล์ใหม่ตั้งชื่อให้อัตโนมัติ เช่น รายงาน-p10-20.pdf\n• คลิกขวาที่หน้า (ทั้งภาพย่อด้านซ้ายและมุมมองหลายไฟล์): ทำสำเนา · ตัด · คัดลอก · วาง · หมุน · ลบ · แยกเป็นไฟล์ใหม่ — ตัด/คัดลอกแล้ววางข้ามไฟล์ได้ · ปุ่มลัด Ctrl/⌘ + D X C V และ Delete",
+    "en": "Split documents by drag & drop ✂️\n• Multi-file view: select several pages with Shift / Ctrl(⌘) + click or \"Select all\"\n• Drag the selection onto the \"Drop pages here\" card to split it into a new file (e.g. pages 10–20 of a 20-page file)\n• \"Split into new file…\" button: type a range such as 10-20 or 1,3,5-7\n• Drag several pages at once to another file or reorder them (hold Alt/⌥ to copy)\n• New files are named automatically, e.g. report-p10-20.pdf\n• Right-click a page (thumbnails and multi-file view): duplicate · cut · copy · paste · rotate · delete · split — cut/copy and paste across files · shortcuts Ctrl/⌘ + D X C V and Delete"
   },
-  "page": "https://github.com/nasongwut/PDF-PRO/releases/tag/v1.0.0",
+  "page": "https://github.com/nasongwut/PDF-PRO/releases/tag/v1.1.0",
   "homepage": "https://github.com/nasongwut/PDF-PRO",
   "downloads": {
     "windows": {
-      "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.0.0/PDF-PRO-1.0.0-windows-setup.exe",
-      "sha256": "6d72cbfcc629887d5b77db4582e87d2595dc38561bceab4330ae1a7ef2598716"
+      "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.1.0/PDF-PRO-1.1.0-windows-setup.exe",
+      "sha256": "d390f45b78b2f1b08f87491d3c05dcf4c13cf1304667f6d09d632d6e1889e9c6"
     },
     "mac-arm64": {
-      "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.0.0/PDF-PRO-1.0.0-mac-arm64.dmg",
-      "sha256": "847abe66e757e33cc1c6d3a1713103a6fb588bf04efbab75821f87e25447d3d2"
+      "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.1.0/PDF-PRO-1.1.0-mac-arm64.dmg",
+      "sha256": "4fa68f3ef17f1fa79e56dde440febc7afaf7b0bebb8b101b87d107e88f7d5f1b"
     },
     "mac-x64": {
-      "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.0.0/PDF-PRO-1.0.0-mac-x64.dmg",
-      "sha256": "bdcbd9a73eea31593c540948165cab052e93c36d025db02601ed1acaae4201e0"
+      "url": "https://github.com/nasongwut/PDF-PRO/releases/download/v1.1.0/PDF-PRO-1.1.0-mac-x64.dmg",
+      "sha256": "5aa71673fdb76959b1fcfe7818e6510be39c4310a85543e7cb687a2a89ac4351"
     },
     "source": {
-      "url": "https://github.com/nasongwut/PDF-PRO/archive/refs/tags/v1.0.0.zip",
+      "url": "https://github.com/nasongwut/PDF-PRO/archive/refs/tags/v1.1.0.zip",
       "sha256": ""
     }
   },
